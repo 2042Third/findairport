@@ -99,10 +99,10 @@ public class FindAirports extends HttpServlet {
 		{
 			con = DriverManager.getConnection(url, "admin", "f3ck");
 			String query = "SELECT airport, city, country, latitude, longitude " + 
-						  "FROM advjava.airports WHERE country = ? AND city = ?";
+						  "FROM advjava.airports WHERE country LIKE ? AND city LIKE ?";
 			try (PreparedStatement stat = con.prepareStatement(query)) {
-				stat.setString(1, country);
-				stat.setString(2, city);
+				stat.setString(1, country+"%");
+				stat.setString(2, city+"%");
 				try (ResultSet rs = stat.executeQuery()) {
 					System.out.println("Executed the following SQL statement:");
 					System.out.println(query);

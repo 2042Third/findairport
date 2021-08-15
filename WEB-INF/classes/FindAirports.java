@@ -52,6 +52,18 @@ public class FindAirports extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		response.getWriter().append("<html><title>Airport Search Web App</title><body>" +
+				"<form method=\"POST\">Enter country:<br/><input name=\"country\" type=\"text\">" +
+				"<br/>Enter city:<br/><input name=\"city\" type=\"text\" size=\"60\">" +
+				"<br/><input type=\"submit\" value=\"Find\"></form>" +
+				"</body></html>");
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		//doGet(request, response);
@@ -87,18 +99,7 @@ public class FindAirports extends HttpServlet {
 		Preferences node = Preferences.userNodeForPackage(this.getClass());
     String url = node.get("MySQLConnection", "jdbc:mysql://localhost:9234/advjava?useSSL=false");
 
-/*		try {
-			Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
-		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
+
 		Connection con = null;
 		StringBuffer resultTable = new StringBuffer(
 				"<table><tr><th>Airport</th><th>City</th><th>Country</th>" +
@@ -107,26 +108,21 @@ public class FindAirports extends HttpServlet {
 		try
 		{
 			con = DriverManager.getConnection(url, "admin", "f3ck");
-      String query = "SELECT airport, city, country, latitude, longitude" +
-				" FROM advjava.airports " +
-				" WHERE country=? AND city=?;";
-				PreparedStatement stat = con.prepareStatement(query);
-        stat.setString(1,country);
-        stat.setString(2, city);
-				boolean res = stat.execute(query);
-        try{
-				if (res) {
-				PreparedStatement stat = con.prepareStatement(query);
-						System.out.println("Executed the following SQL statement:");
-						System.out.println(query);
-						while (rs.next()) {
-							resultTable.append("<tr><td>").append(rs.getString(1)).
-								append("</td><td>").append(rs.getString("city")).
-								append("</td><td>").append(rs.getString(3)).
-								append("</td><td>").append(rs.getDouble(4)).
-								append("</td><td>").append(rs.getDouble(5)).
-								append("</td></tr>");
-						}
+			String query = "SELECT airport, city, country, latitude, longitude " + 
+						  "FROM advjava.airports WHERE country = ? AND city = ?";
+			try (PreparedStatement stat = con.prepareStatement(query)) {
+				stat.setString(1, country);
+				stat.setString(2, city);
+				try (ResultSet rs = stat.executeQuery()) {
+					System.out.println("Executed the following SQL statement:");
+					System.out.println(query);
+					while (rs.next()) {
+						resultTable.append("<tr><td>").append(rs.getString(1)).
+							append("</td><td>").append(rs.getString("city")).
+							append("</td><td>").append(rs.getString(3)).
+							append("</td><td>").append(rs.getDouble(4)).
+							append("</td><td>").append(rs.getDouble(5)).
+							append("</td></tr>");
 					}
 				}
 				resultTable.append("</table>");

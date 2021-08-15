@@ -49,17 +49,7 @@ public class FindAirports extends HttpServlet {
 				"</body></html>");
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws  IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("<html><title>Airport Search Web App</title><body>" +
-				"<form method=\"POST\">Enter country:<br/><input name=\"country\" type=\"text\">" +
-				"<br/>Enter city:<br/><input name=\"city\" type=\"text\" size=\"60\">" +
-				"<br/><input type=\"submit\" value=\"Find\"></form>" +
-				"</body></html>");
-	}
+
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
